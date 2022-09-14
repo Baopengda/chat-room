@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 引入socket.io服务 -->
+    <!-- 这里边加载的socket.io.js文件,并不是本地的 是服务端的js文件-->
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    我是客户端
+</body>
+<script>
+    //连接socket.io
+    let socket = io.connect("/");
+    //接收服务端的信息
+    socket.on('h560',function(data){
+        console.log(data);
+    })
+
+    //客户端发送消息给服务端
+    socket.emit('h560',{'data':'啪啪啪'});
+</script>
+</html>

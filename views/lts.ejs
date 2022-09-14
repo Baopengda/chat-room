@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- 引入socket.io -->
+    <!--这里边引入的socket.io.js文件并不是本地的文件,socket是引入的socket服务中的js文件-->
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/jquery/dist/jquery.min.js"></script>
+	<style>
+		.max{
+			width:50%;
+			height:600px;
+			margin:0px auto;
+			margin-top:100px;
+			border:10px solid #999;
+			padding-top:10px;
+		}
+		.left{
+			width:100%;
+			border-bottom:1px solid #999;
+			height:40px;
+		}
+		.right{
+			width:100%;
+			height:40px;
+			border-bottom:1px solid #999;
+		}
+		.top{
+			width: 100%;
+			height:400px;
+		}
+		#kuang{
+			display: none;
+		}
+		.l{
+			float:left;
+		}
+		.r{
+			float:right;
+		}
+	</style>
+	<title>聊天室</title>	
+</head>
+<body>
+	<div class="max">
+		<!-- 聊天的区域 -->
+		 <div class="top">
+			
+		 </div>
+         <!-- 聊天的区域结束 -->
+         <!--数据聊天内容的-->
+		<div>
+			<textarea name="" id="" cols="98" rows="5"></textarea>
+		</div>
+		<div id="kuang">
+			<div class="left">
+				<span class="l mc"><b>海峰</b>:</span><span class="mn">宝贝~~想你了</span>
+			</div>
+			<div class="right">
+				<span class="r oc">讨厌~死鬼!</span><span class="r cn"><b>牟楠:</b></span>
+			</div>
+		</div>
+		<div>
+			<button class="send">发送</button>
+		</div>	
+	</div>
+</body>
+<script>
+	//连接socket.io
+	let socket = io.connect("/");
+	//定义一个名字
+	let name = prompt("请输入你的名字");
+	console.log(name);
+	//给发送按钮绑定单击事件
+	$('.send').click(function(){
+		//获取多行文本中的内容(聊天的消息)
+		let tval = $("textarea").val();
+		//console.log(tval);
+		if(tval==""){
+			alert("发送的消息不能为空");
+		}else{
+			let me = $('#kuang .left').clone();
+			me.find('.mc b').html(name);
+			me.find('.mn').html(tval);
+			$('.top').append(me);
+			$('textarea').val('');
+			socket.emit('h560',{name:name,data:tval});
+		}
+	})
+
+	//敲回车发消息
+	$(window).keydown(function(e){
+		if(e.keyCode == 13){
+			$('.send').trigger('click');
+			return false;
+		}
+	})
+	socket.on('h560',function(data){
+		let o = $("#kuang .right").clone();
+		o.find('.oc').html(data.data);
+		o.find('.cn b').html(data.name);
+		$('.top').append(o);
+		console.log(data);
+	})
+</script>
+</html>
+
+
